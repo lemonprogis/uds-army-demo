@@ -18,12 +18,12 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-
-      - name: Build Docker image
-        run: uds run build
-
+    
       - name: UDS CLI Setup
         uses: ./.github/actions/uds-cli-setup
+      
+      - name: Build Docker image
+        run: uds run build
       
       - name: OLM CLI Setup
         uses: ./.github/actions/olm-cli-setup
