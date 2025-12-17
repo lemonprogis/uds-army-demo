@@ -38,6 +38,7 @@ jobs:
       - name: Vouch for Zarf Package
         run: |
           echo ${{ secrets.COSIGN_PRIVATE_KEY }} > cosign.key
+          ls -la
           ./olm vouch zarf-package-*.tar.zst --key cosign.key --token ${{ secrets.OLM_TOKEN }} --log-level debug
       
       - name: Publish Zarf Package
