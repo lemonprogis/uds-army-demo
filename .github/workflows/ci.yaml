@@ -42,7 +42,7 @@ jobs:
           CHAINLOOP_TOKEN: ${{ secrets.OLM_TOKEN }}
         run: |
           ls -la
-          ./olm vouch zarf-package-*.tar.zst --log-level debug
+          ./olm vouch zarf-package-*.tar.zst --key env://COSIGN_KEY --log-level debug
       
       - name: Publish Zarf Package
         run: |
