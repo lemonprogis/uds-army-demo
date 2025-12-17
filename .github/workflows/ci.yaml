@@ -39,7 +39,9 @@ jobs:
         env:
           COSIGN_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}  # if your key is password-protected
-          CHAINLOOP_TOKEN: ${{ secrets.OLM_TOKEN }}
+          OLM_TOKEN: ${{ secrets.OLM_TOKEN }}
+          OLM_CONTROL_PLANE: cp.uds.run:443
+          OLM_CAS_SERVER: cas.uds.run:443
         run: |
           ls -la
           ./olm vouch zarf-package-*.tar.zst --key env://COSIGN_KEY --log-level debug
