@@ -28,5 +28,3 @@ runs:
         VERSION=${{ inputs.version }}
         # renovate: ignore
         uds zarf package deploy oci://${{ inputs.registry_url }}/defenseunicorns/olm-installer:${VERSION} -a amd64 --confirm
-        chmod +x olm
-        sudo mv olm /usr/local/bin/
