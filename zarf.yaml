@@ -1,0 +1,24 @@
+# Copyright 2024 Defense Unicorns
+# SPDX-License-Identifier: AGPL-3.0-or-later OR LicenseRef-Defense-Unicorns-Commercial
+
+# yaml-language-server: $schema=https://raw.githubusercontent.com/defenseunicorns/zarf/main/zarf.schema.json
+kind: ZarfPackageConfig
+metadata:
+  name: demo-app
+  description: "UDS Army Demo"
+  version: "dev"
+
+components:
+  - name: demo-app
+    required: true
+    description: "Deploy Demo App"
+    import:
+      path: common
+    only:
+      flavor: upstream
+    charts:
+      - name: demo-app
+        valuesFiles:
+          - values/upstream-values.yaml
+    images:
+      - ghcr.io/dev/demo-app:latest

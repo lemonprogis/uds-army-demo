@@ -1,0 +1,55 @@
+{{- if .Values.service.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python
+  labels:
+    app.kubernetes.io/component: python-service
+spec:
+  replicas: {{ .Values.service.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: python-service
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/component: python-service
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: python-service
+          image: "{{ .Values.service.image.repository }}:{{ .Values.service.image.tag }}"
+          imagePullPolicy: {{ .Values.service.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.service.targetPort }}
+              protocol: TCP
+          env:
+            - name: SERVICE_NAME
+              value: "{{ .Values.service.env.SERVICE_NAME }}"
+            - name: APP_ENV
+              value: "{{ .Values.service.env.APP_ENV }}"
+            - name: APP_MESSAGE
+              value: "{{ .Values.service.env.APP_MESSAGE }}"
+            - name: PORT
+              value: "{{ .Values.service.env.PORT }}"
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 20
+          resources:
+            {{- toYaml .Values.service.resources | nindent 12 }}
+{{- end }}

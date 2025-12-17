@@ -1,0 +1,24 @@
+replicaCount: 1
+
+image:
+  repository: demo-app
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+service:
+  type: ClusterIP
+  port: 8000
+
+env:
+  SERVICE_NAME: python-service
+  APP_MESSAGE: "Hello from Python 12-factor app!"
+  APP_ENV: container
+  PORT: "8000"
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi

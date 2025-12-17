@@ -1,0 +1,24 @@
+variables:
+  - name: TAG
+    default: dev
+  - name: FLAVOR
+    default: upstream
+  - name: ARCHITECTURE
+    default: amd64
+
+tasks:
+  - name: build
+    description: Build the Docker image for the Python Flask app
+    actions:
+      - cmd: docker build -t ghcr.io/dev/demo-app:latest ./app
+
+  - name: build-tag
+    description: Build and tag the Docker image with a custom tag
+    actions:
+      - cmd: docker build -t ghcr.io/dev/demo-app:${TAG:-dev} ./app
+
+  - name: build-zarf-package
+    description: create zarf package
+    actions:
+      - cmd: |
+          uds zarf package create . --confirm --no-progress --architecture="${ARCHITECTURE}" --flavor "${FLAVOR}"

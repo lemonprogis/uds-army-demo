@@ -1,0 +1,32 @@
+name: OLM CLI Setup
+description: Install OLM CLI
+
+inputs:
+  registry_url:
+    description: URL of the registry to authenticate against
+    default: registry.uds.run
+  version:
+    description: Version of OLM CLI to install
+    default: v0.1.2-linux
+  username:
+    description: Username for authentication if needed
+    required: true
+  password:
+    description: Password for authentication if needed
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Authenticate with UDS Registry
+      shell: bash
+      run: |
+        uds zarf tools registry login -u "${{ inputs.username }}" -p "${{ inputs.password }}" ${{ inputs.registry_url }}
+    - name: Install OLM CLI
+      shell: bash
+      run: |
+        VERSION=${{ inputs.version }}
+        # renovate: ignore
+        uds zarf package deploy oci://${{ inputs.registry_url }}/defenseunicorns/olm-installer:${VERSION} -a amd64 --confirm
+        chmod +x olm
+        sudo mv olm /usr/local/bin/
