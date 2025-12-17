@@ -31,17 +31,18 @@ jobs:
           username: ${{ secrets.OLM_USER_ID }}
           password: ${{ secrets.OLM_PASSWORD }}
 
-      - name: Build Zarf package
-        run: |
-          uds run build-zarf-package
+      #- name: Build Zarf package
+      #  run: |
+      #    uds run build-zarf-package
 
       - name: Vouch for Zarf Package
         run: |
-          echo ${{ secrets.COSIGN_PRIVATE_KEY }} > cosign.key
           ls -la
-          ./olm vouch zarf-package-*.tar.zst --key cosign.key --token ${{ secrets.OLM_TOKEN }} --log-level debug
+          #echo ${{ secrets.COSIGN_PRIVATE_KEY }} > cosign.key
+          #ls -la
+          #./olm vouch zarf-package-*.tar.zst --key cosign.key --token ${{ secrets.OLM_TOKEN }} --log-level debug
       
-      - name: Publish Zarf Package
-        run: |
-          uds zarf tools registry login -u ${{ secrets.DEMO_ORG_USER_ID }} -p ${{ secrets.DEMO_ORG_PASSWORD }} registry.uds.run
-          uds zarf package publish zarf-package-*.tar.zst oci://registry.uds.run/uds-army-demo
+      #- name: Publish Zarf Package
+      #  run: |
+      #    uds zarf tools registry login -u ${{ secrets.DEMO_ORG_USER_ID }} -p ${{ secrets.DEMO_ORG_PASSWORD }} registry.uds.run
+      #    uds zarf package publish zarf-package-*.tar.zst oci://registry.uds.run/uds-army-demo
