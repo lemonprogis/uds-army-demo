@@ -43,9 +43,10 @@ jobs:
           OLM_CONTROL_PLANE: attest-cp.uds.run:443
           OLM_CAS_SERVER: attest-cas.uds.run:443
         run: |
-          ls -la
-          echo "$COSIGN_PRIVATE_KEY" > cosign.key
+          echo -e "$COSIGN_PRIVATE_KEY" > cosign.key
+          head -n 1 cosign.key  # Should show "-----BEGIN ENCRYPTED COSIGN PRIVATE KEY-----"
           ./olm vouch zarf-package-*.tar.zst --key cosign.key --log-level debug
+          rm -f cosign.key
       
       - name: Publish Zarf Package
         run: |
