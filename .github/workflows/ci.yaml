@@ -44,11 +44,7 @@ jobs:
           OLM_CONTROL_PLANE: attest-cp.uds.run:443
           OLM_CAS_SERVER: attest-cas.uds.run:443
         run: |
-          echo -e "${{ secrets.COSIGN_PRIVATE_KEY }}" > cosign.key
-          chmod 600 cosign.key
-          cat cosign.key
-          ./olm vouch zarf-package-*.tar.zst --key ./cosign.key --log-level debug
-          rm -f cosign.key
+          ./olm vouch zarf-package-*.tar.zst --key github://lemonprogis/uds-army-demo --log-level debug
       
       - name: Publish Zarf Package
         run: |
