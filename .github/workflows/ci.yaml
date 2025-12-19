@@ -44,7 +44,8 @@ jobs:
           OLM_CAS_SERVER: attest-cas.uds.run:443
         run: |
           ls -la
-          ./olm vouch zarf-package-*.tar.zst --key env://COSIGN_KEY --log-level debug
+          echo "$COSIGN_PRIVATE_KEY" > cosign.key
+          ./olm vouch zarf-package-*.tar.zst --key cosign.key --log-level debug
       
       - name: Publish Zarf Package
         run: |

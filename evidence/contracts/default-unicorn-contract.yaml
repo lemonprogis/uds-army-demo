@@ -1,0 +1,5 @@
+apiVersion: chainloop.dev/v1
+kind: Contract
+metadata:
+  name: default-unicorn-contract
+spec: {}
