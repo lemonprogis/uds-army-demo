@@ -11,6 +11,9 @@ on:
 jobs:
   build-package-vouch-publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
 
     steps:
       - name: Checkout code
@@ -38,7 +41,6 @@ jobs:
       - name: Vouch for Zarf Package
         env:
           COSIGN_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
-          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}  # if your key is password-protected
           OLM_TOKEN: ${{ secrets.OLM_TOKEN }}
           OLM_CONTROL_PLANE: attest-cp.uds.run:443
           OLM_CAS_SERVER: attest-cas.uds.run:443
