@@ -6,7 +6,7 @@ kind: ZarfPackageConfig
 metadata:
   name: demo-app
   description: "UDS Army Demo"
-  version: "1.0.0"
+  version: "1.0.1"
 
 components:
   - name: demo-app
