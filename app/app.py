@@ -9,7 +9,7 @@ def getenv(key, default):
     return value if value else default
 
 SERVICE_NAME = getenv("SERVICE_NAME", "python-service")
-APP_MESSAGE = getenv("APP_MESSAGE", "Hello from Python 12-factor app! Check it out.")
+APP_MESSAGE = getenv("APP_MESSAGE", "Hello from Python 12-factor app! Check it out with relative paths.")
 APP_ENV = getenv("APP_ENV", "dev")
 
 
