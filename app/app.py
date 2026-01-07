@@ -8,7 +8,7 @@ def getenv(key, default):
     value = os.getenv(key)
     return value if value else default
 
-SERVICE_NAME = getenv("SERVICE_NAME", "python-service")
+SERVICE_NAME = getenv("SERVICE_NAME", "python-services-demo-app")
 APP_MESSAGE = getenv("APP_MESSAGE", "Hello from Python 12-factor app! Check it out with relative paths.")
 APP_ENV = getenv("APP_ENV", "dev")
 
