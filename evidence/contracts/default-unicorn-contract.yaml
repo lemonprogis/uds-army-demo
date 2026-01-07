@@ -2,4 +2,10 @@ apiVersion: chainloop.dev/v1
 kind: Contract
 metadata:
   name: default-unicorn-contract
-spec: {}
+spec:
+  materials:
+    - name: customer-attestation
+      type: ATTESTATION
+  policies:
+    attestation:
+      - ref: https://udsarmychainlooppolicies.blob.core.usgovcloudapi.net/policies/v0.1.0/4.e.2-vulnerability-scan/policy.yaml
