@@ -7,7 +7,7 @@ spec:
     - name: customer-attestation
       type: ATTESTATION
   policies:
-    materials:
+    attestation:
       - ref: https://udsarmychainlooppolicies.blob.core.usgovcloudapi.net/policies/v0.1.5/4.a.7-artifact-presence-integrity/material-present/policy.yaml
         with:
           material_name: customer-attestation
