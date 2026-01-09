@@ -27,7 +27,7 @@ def root():
 def healthz():
     return jsonify(status="ok", service=SERVICE_NAME)
 
-@app.route("/testing-my-now-route")
+@app.route("/testing-my-now")
 def test():
     return jsonify(test="test successful", service=SERVICE_NAME)
 
