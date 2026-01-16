@@ -32,6 +32,11 @@ def test():
     return jsonify(test="test successful", service=SERVICE_NAME)
 
 
+@app.route("/another-testing")
+def another_test():
+    return jsonify(test="test again", service=SERVICE_NAME)
+
+
 if __name__ == "__main__":
     port = int(getenv("PORT", "8000"))
     app.run(host="0.0.0.0", port=port)
