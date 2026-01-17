@@ -32,7 +32,7 @@ def test():
     return jsonify(test="test successful", service=SERVICE_NAME)
 
 
-@app.route("/another-testing")
+@app.route("/another-test")
 def another_test():
     return jsonify(test="test again", service=SERVICE_NAME)
 
