@@ -11,8 +11,8 @@ metadata:
 constants:
   - name: IMAGE_DIGEST
     value: "###ZARF_PKG_TMPL_IMAGE_DIGEST###"
-  - name: IMAGE_SIGNATURE
-    value: "###ZARF_PKG_TMPL_IMAGE_SIGNATURE###"
+  - name: SIG_BUNDLE_DIGEST
+    value: "###ZARF_PKG_TMPL_SIG_BUNDLE_DIGEST###"
 
 components:
   - name: demo-app
@@ -28,4 +28,4 @@ components:
           - values/upstream-values.yaml
     images:
       - ghcr.io/lemonprogis/uds-army-demo@###ZARF_PKG_TMPL_IMAGE_DIGEST###
-      - "###ZARF_PKG_TMPL_IMAGE_SIGNATURE###"
+      - "###ZARF_PKG_TMPL_SIG_BUNDLE_DIGEST###"
