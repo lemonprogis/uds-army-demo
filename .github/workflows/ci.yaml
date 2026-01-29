@@ -70,7 +70,6 @@ jobs:
           OLM_CAS_SERVER: attest-cas.uds.run:443
         run: |
           echo "${{ secrets.COSIGN_PRIVATE_KEY }}" > cosign.key
-          cosign sign --key cosign.key ghcr.io/dev/demo-app:latest
           ./olm vouch zarf-package-*.tar.zst --key cosign.key --log-level debug
           rm -f cosign.key
       
