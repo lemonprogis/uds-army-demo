@@ -68,11 +68,11 @@ jobs:
           OLM_TOKEN: ${{ secrets.OLM_TOKEN }}
           OLM_CONTROL_PLANE: attest-cp.uds.run:443
           OLM_CAS_SERVER: attest-cas.uds.run:443
+          COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
         run: |
-          echo "${{ secrets.COSIGN_PRIVATE_KEY }}" > cosign.key
-          ./olm vouch zarf-package-*.tar.zst --key cosign.key --log-level debug
-          rm -f cosign.key
-      
+          ./olm vouch zarf-package-*.tar.zst --key env://COSIGN_PRIVATE_KEY --log-level debug
+
       - name: Publish Zarf Package
         run: |
           uds zarf tools registry login -u ${{ secrets.DEMO_ORG_USER_ID }} -p ${{ secrets.DEMO_ORG_PASSWORD }} registry.uds.run
