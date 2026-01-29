@@ -28,4 +28,4 @@ components:
           - values/upstream-values.yaml
     images:
       - ghcr.io/lemonprogis/uds-army-demo@###ZARF_PKG_TMPL_IMAGE_DIGEST###
-      - "###ZARF_PKG_TMPL_SIG_BUNDLE_DIGEST###"
+      - ghcr.io/lemonprogis/uds-army-demo@###ZARF_PKG_TMPL_SIG_BUNDLE_DIGEST###
