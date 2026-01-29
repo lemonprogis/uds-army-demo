@@ -32,3 +32,4 @@ node_modules/
 # VSCode
 .vscode/
 cosign.key
+artifact-sig-gen
