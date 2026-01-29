@@ -11,4 +11,4 @@ tasks:
     description: create zarf package
     actions:
       - cmd: |
-          uds zarf package create . --confirm --no-progress --architecture="${ARCHITECTURE}" --flavor "${FLAVOR}"
+          uds zarf package create . --confirm --no-progress --architecture="${ARCHITECTURE}" --flavor "${FLAVOR}" --set IMAGE_TAG="${{ inputs.TAG }}"

@@ -8,6 +8,10 @@ metadata:
   description: "UDS Army Demo"
   version: "2.0.9"
 
+constants:
+  - name: IMAGE_TAG
+    value: "###ZARF_PKG_TMPL_IMAGE_TAG###"
+
 components:
   - name: demo-app
     required: true
@@ -21,4 +25,4 @@ components:
         valuesFiles:
           - values/upstream-values.yaml
     images:
-      - ghcr.io/lemonprogis/uds-army-demo:latest
+      - ghcr.io/lemonprogis/uds-army-demo:###ZARF_PKG_TMPL_IMAGE_TAG###
