@@ -51,7 +51,7 @@ jobs:
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
         run: |
-          echo $COSIGN_PASSWORD | cosign sign --yes --key env://COSIGN_PRIVATE_KEY ghcr.io/${{ github.repository }}:latest
+          cosign sign --yes --key env://COSIGN_PRIVATE_KEY ghcr.io/${{ github.repository }}:latest
 
       - name: OLM CLI Setup
         uses: ./.github/actions/olm-cli-setup
@@ -71,7 +71,7 @@ jobs:
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
         run: |
-          echo $COSIGN_PASSWORD | ./olm vouch zarf-package-*.tar.zst --key env://COSIGN_PRIVATE_KEY --log-level debug
+          echo "$COSIGN_PASSWORD" | ./olm vouch zarf-package-*.tar.zst --key env://COSIGN_PRIVATE_KEY --log-level debug
 
       - name: Publish Zarf Package
         run: |
