@@ -21,4 +21,4 @@ components:
         valuesFiles:
           - values/upstream-values.yaml
     images:
-      - ghcr.io/dev/demo-app:latest
+      - ghcr.io/lemonprogis/uds-army-demo:latest

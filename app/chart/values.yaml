@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: demo-app
+  repository: ghcr.io/lemonprogis/uds-army-demo
   pullPolicy: IfNotPresent
   tag: "latest"
 

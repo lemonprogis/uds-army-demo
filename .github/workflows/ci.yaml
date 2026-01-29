@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      packages: write
       id-token: write
 
     steps:
@@ -25,11 +26,33 @@ jobs:
       - name: UDS CLI Setup
         uses: ./.github/actions/uds-cli-setup
       
-      - name: Build Docker image
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.1.1
+      
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2.1.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish Dockerfile
+        uses: docker/build-push-action@v4
+        id: build-and-push
+        with:
+          context: ./app
+          file: ./Dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: ghcr.io/${{ github.repository }}:latest
+      
+      - name: Sign image with a key
+        run: |
+          cosign sign --yes --key env://COSIGN_PRIVATE_KEY  ghcr.io/${{ github.repository }}:latest
         env:
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
-        run: uds run build
-      
+          COSIGN_PASSWORD: ""
+
       - name: OLM CLI Setup
         uses: ./.github/actions/olm-cli-setup
         with:

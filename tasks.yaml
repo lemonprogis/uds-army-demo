@@ -7,20 +7,6 @@ variables:
     default: amd64
 
 tasks:
-  - name: build
-    description: Build the Docker image for the Python Flask app
-    actions:
-      - cmd: |
-          docker build -t ghcr.io/dev/demo-app:latest ./app
-          cosign sign --key env://COSIGN_PRIVATE_KEY ghcr.io/dev/demo-app:latest
-
-  - name: build-tag
-    description: Build and tag the Docker image with a custom tag
-    actions:
-      - cmd: |
-          docker build -t ghcr.io/dev/demo-app:${TAG:-dev} ./app
-          cosign sign --key env://COSIGN_PRIVATE_KEY ghcr.io/dev/demo-app:${TAG:-dev}
-
   - name: build-zarf-package
     description: create zarf package
     actions:
