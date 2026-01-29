@@ -71,7 +71,7 @@ jobs:
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
         run: |
           cosign sign --yes --key env://COSIGN_PRIVATE_KEY ghcr.io/${{ github.repository }}@${{ steps.build-and-push.outputs.digest }}
-          SIG_REF=$(cosign triangulate ghcr.io/${{ github.repository }}@${{ steps.build-and-push.outputs.digest }}
+          SIG_REF=$(cosign triangulate ghcr.io/${{ github.repository }}@${{ steps.build-and-push.outputs.digest }})
           echo "sig_ref=$SIG_REF" >> "$GITHUB_OUTPUT"
 
       - name: OLM CLI Setup
