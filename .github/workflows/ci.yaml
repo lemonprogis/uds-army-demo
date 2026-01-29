@@ -61,7 +61,7 @@ jobs:
 
       - name: Build Zarf package
         run: |
-          uds run build-zarf-package --set TAG=sha256-${{ steps.build-and-push.outputs.digest }}
+          uds run build-zarf-package --set TAG=${{ steps.build-and-push.outputs.digest }}
 
       - name: Vouch for Zarf Package
         env:
