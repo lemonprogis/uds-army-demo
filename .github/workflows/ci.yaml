@@ -77,8 +77,8 @@ jobs:
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
         run: |
-          cosign sign --yes --use-signing-config=false --new-bundle-format=false --key env://COSIGN_PRIVATE_KEY ghcr.io/${{ github.repository }}@${{ steps.build-and-push.outputs.digest }}
-          SIG_BUNDLE_REF=$(cosign triangulate "ghcr.io/${{ github.repository }}@${{ steps.build-and-push.outputs.digest }}")
+          cosign sign --yes --key env://COSIGN_PRIVATE_KEY ghcr.io/${{ github.repository }}@${{ steps.build-and-push.outputs.digest }}
+          SIG_BUNDLE_REF=$(cosign triangulate "ghcr.io/${{ github.repository }}@${{ steps.build-and-push.outputs.digest }}" --type='digest')
           echo "sig_bundle_ref=$SIG_BUNDLE_REF" >> "$GITHUB_OUTPUT"
 
       - name: Build Zarf package
