@@ -31,7 +31,7 @@ jobs:
 
       - name: Install OpenGrep
         run: |
-          curl -sSL https://raw.githubusercontent.com/opengrep/opengrep/v1.15.1/install.sh | sh
+          curl -sSL https://raw.githubusercontent.com/opengrep/opengrep/v1.15.1/install.sh | bash
           echo "$HOME/.opengrep/bin" >> $GITHUB_PATH
       
       - name: Login to GitHub Container Registry
