@@ -77,14 +77,14 @@ jobs:
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
         run: |
           cosign sign --yes --key env://COSIGN_PRIVATE_KEY ghcr.io/${{ github.repository }}@${{ steps.build-and-push.outputs.digest }}
-          SIG_BUNDLE_DIGEST=$(cosign triangulate "ghcr.io/${{ github.repository }}@${{ steps.build-and-push.outputs.digest }}" --type='digest')
-          echo "sig_bundle_digest=$SIG_BUNDLE_DIGEST" >> "$GITHUB_OUTPUT"
+          SIG_BUNDLE_REF=$(cosign triangulate "ghcr.io/${{ github.repository }}@${{ steps.build-and-push.outputs.digest }}" --type='digest')
+          echo "sig_bundle_ref=$SIG_BUNDLE_REF" >> "$GITHUB_OUTPUT"
 
       - name: Build Zarf package
         run: |
           ARCHITECTURE="amd64"
           FLAVOR="upstream"
-          uds zarf package create . --confirm --no-progress --architecture="${ARCHITECTURE}" --flavor "${FLAVOR}" --set IMAGE_DIGEST="${{ steps.build-and-push.outputs.digest }}" --set SIG_BUNDLE_DIGEST="${{ steps.image_sign.outputs.sig_bundle_digest }}"
+          uds zarf package create . --confirm --no-progress --architecture="${ARCHITECTURE}" --flavor "${FLAVOR}" --set IMAGE_DIGEST="${{ steps.build-and-push.outputs.digest }}" --set SIG_BUNDLE_REF="${{ steps.image_sign.outputs.sig_bundle_ref }}"
 
       - name: Vouch for Zarf Package
         env:
