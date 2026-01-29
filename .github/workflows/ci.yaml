@@ -71,7 +71,7 @@ jobs:
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
         run: |
-          ./olm vouch zarf-package-*.tar.zst --key env://COSIGN_PRIVATE_KEY --log-level debug
+          echo $COSIGN_PASSWORD | ./olm vouch zarf-package-*.tar.zst --key env://COSIGN_PRIVATE_KEY --log-level debug
 
       - name: Publish Zarf Package
         run: |
