@@ -74,7 +74,7 @@ jobs:
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
         run: |
           cosign sign --yes --key env://COSIGN_PRIVATE_KEY ghcr.io/${{ github.repository }}@${{ steps.build-and-push.outputs.digest }}
-          SIG_REF=$(oras discover "$IMG" --format json | jq -r '.referrers[0].reference')
+          SIG_REF=$(oras discover "ghcr.io/${{ github.repository }}@${{ steps.build-and-push.outputs.digest }}" --format json | jq -r '.referrers[0].reference')
           echo "sig_ref=$SIG_REF" >> "$GITHUB_OUTPUT"
 
       - name: OLM CLI Setup
