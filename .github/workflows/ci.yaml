@@ -41,7 +41,7 @@ jobs:
         id: build-and-push
         with:
           context: ./app
-          file: ./Dockerfile
+          file: Dockerfile
           platforms: linux/amd64
           push: true
           tags: ghcr.io/${{ github.repository }}:latest
