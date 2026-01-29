@@ -70,7 +70,10 @@ jobs:
 
       - name: Build Zarf package
         run: |
-          uds run build-zarf-package --set "TAG=${{ steps.build-and-push.outputs.digest }}"
+          ARCHITECTURE="amd64"
+          FLAVOR="upstream"
+          IMAGE_TAG="${{ steps.build-and-push.outputs.digest }}"
+          uds zarf package create . --confirm --no-progress --architecture="${ARCHITECTURE}" --flavor "${FLAVOR}" --set IMAGE_TAG="${IMAGE_TAG}"
 
       - name: Vouch for Zarf Package
         env:
