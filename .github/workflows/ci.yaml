@@ -70,8 +70,8 @@ jobs:
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
         run: |
-          cosign sign --yes --key env://COSIGN_PRIVATE_KEY ghcr.io/${{ github.repository }}:${{ steps.prep.outputs.VERSION }}
-          SIG_REF=$(cosign triangulate ghcr.io/${{ github.repository }}:${{ steps.prep.outputs.VERSION }})
+          cosign sign --yes --key env://COSIGN_PRIVATE_KEY ghcr.io/${{ github.repository }}@${{ steps.build-and-push.outputs.digest }}
+          SIG_REF=$(cosign triangulate ghcr.io/${{ github.repository }}@${{ steps.build-and-push.outputs.digest }}
           echo "sig_ref=$SIG_REF" >> "$GITHUB_OUTPUT"
 
       - name: OLM CLI Setup
@@ -84,7 +84,7 @@ jobs:
         run: |
           ARCHITECTURE="amd64"
           FLAVOR="upstream"
-          uds zarf package create . --confirm --no-progress --architecture="${ARCHITECTURE}" --flavor "${FLAVOR}" --set IMAGE_TAG="${{ steps.prep.outputs.VERSION }}" --set IMAGE_SIGNATURE="${{ steps.image_sign.outputs.sig_ref }}"
+          uds zarf package create . --confirm --no-progress --architecture="${ARCHITECTURE}" --flavor "${FLAVOR}" --set IMAGE_DIGEST="${{ steps.build-and-push.outputs.digest }}" --set IMAGE_SIGNATURE="${{ steps.image_sign.outputs.sig_ref }}"
 
       - name: Vouch for Zarf Package
         env:

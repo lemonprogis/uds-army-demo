@@ -9,8 +9,8 @@ metadata:
   version: "2.0.9"
 
 constants:
-  - name: IMAGE_TAG
-    value: "###ZARF_PKG_TMPL_IMAGE_TAG###"
+  - name: IMAGE_DIGEST
+    value: "###ZARF_PKG_TMPL_IMAGE_DIGEST###"
   - name: IMAGE_SIGNATURE
     value: "###ZARF_PKG_TMPL_IMAGE_SIGNATURE###"
 
@@ -27,5 +27,5 @@ components:
         valuesFiles:
           - values/upstream-values.yaml
     images:
-      - ghcr.io/lemonprogis/uds-army-demo:###ZARF_PKG_TMPL_IMAGE_TAG###
+      - ghcr.io/lemonprogis/uds-army-demo@###ZARF_PKG_TMPL_IMAGE_DIGEST###
       - "###ZARF_PKG_TMPL_IMAGE_SIGNATURE###"
