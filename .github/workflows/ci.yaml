@@ -64,6 +64,7 @@ jobs:
           file: ./app/Dockerfile
           platforms: linux/amd64
           push: true
+          provenance: false
           tags: ghcr.io/${{ github.repository }}:${{ steps.prep.outputs.VERSION }}
 
       - name: OpenGrep Scan
