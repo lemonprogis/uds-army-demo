@@ -29,6 +29,9 @@ jobs:
       - name: Install Cosign
         uses: sigstore/cosign-installer@v4.0.0
 
+      - name: Install Oras
+        uses: oras-project/setup-oras@v1
+
       - name: Install OpenGrep
         run: |
           curl -sSL https://raw.githubusercontent.com/opengrep/opengrep/v1.15.1/install.sh | bash
@@ -71,7 +74,7 @@ jobs:
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
         run: |
           cosign sign --yes --key env://COSIGN_PRIVATE_KEY ghcr.io/${{ github.repository }}@${{ steps.build-and-push.outputs.digest }}
-          SIG_REF=$(cosign triangulate ghcr.io/${{ github.repository }}@${{ steps.build-and-push.outputs.digest }})
+          SIG_REF=$(oras discover "$IMG" --format json | jq -r '.referrers[0].reference')
           echo "sig_ref=$SIG_REF" >> "$GITHUB_OUTPUT"
 
       - name: OLM CLI Setup
