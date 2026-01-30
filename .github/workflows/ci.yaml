@@ -85,7 +85,7 @@ jobs:
         run: |
           ARCHITECTURE="amd64"
           FLAVOR="upstream"
-          uds zarf package create . --confirm --no-progress --architecture="${ARCHITECTURE}" --flavor "${FLAVOR}" --set IMAGE_TAG="${{ steps.prep.outputs.VERSION }}" --set IMAGE_DIGEST="${{ steps.build-and-push.outputs.digest }}" --set SIG_BUNDLE_REF="${{ steps.image_sign.outputs.sig_bundle_ref }}"
+          uds zarf package create . --confirm --no-progress --architecture="${ARCHITECTURE}" --flavor "${FLAVOR}" --set IMAGE_TAG="${{ steps.prep.outputs.VERSION }}"
 
       - name: Vouch for Zarf Package
         env:

@@ -18,6 +18,6 @@ components:
       - name: demo-app
         namespace: demo-app
         localPath: ../app/chart
-        version: 2.0.9
+        version: 2.1.0
         valuesFiles:
           - ../values/common-values.yaml
