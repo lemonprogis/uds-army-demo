@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM python:3.12-slim
+FROM python:3.13.11-alpine
 
 WORKDIR /app
 
@@ -10,13 +10,14 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 # Install dependencies
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
 # Copy app code
 COPY . .
 
 # Create non-root user
-RUN useradd --create-home --shell /bin/bash appuser \
+RUN adduser -D -s /bin/sh appuser \
     && chown -R appuser:appuser /app
 USER appuser
 
