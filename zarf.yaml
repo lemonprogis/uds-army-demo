@@ -6,12 +6,12 @@ kind: ZarfPackageConfig
 metadata:
   name: demo-app
   description: "UDS Army Demo"
-  version: "dev"
+  version: "2.1.1"
 
 constants:
   - name: IMAGE_TAG
     value: "###ZARF_PKG_TMPL_IMAGE_TAG###"
-
+    
 components:
   - name: demo-app
     required: true
