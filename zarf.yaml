@@ -6,7 +6,7 @@ kind: ZarfPackageConfig
 metadata:
   name: demo-app
   description: "UDS Army Demo"
-  version: "2.1.1"
+  version: "2.1.2"
 
 constants:
   - name: IMAGE_TAG
