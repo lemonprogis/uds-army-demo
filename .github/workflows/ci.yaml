@@ -90,8 +90,8 @@ jobs:
       - name: Vouch for Zarf Package
         env:
           OLM_TOKEN: ${{ secrets.OLM_TOKEN }}
-          OLM_CONTROL_PLANE: cp.uds.run:443
-          OLM_CAS_SERVER: cas.uds.run:443
+          OLM_CONTROL_PLANE: cp-api.uds.run:443
+          OLM_CAS_SERVER: cas-api.uds.run:443
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
         run: |
           echo "${{ secrets.COSIGN_PRIVATE_KEY }}" > cosign.key
