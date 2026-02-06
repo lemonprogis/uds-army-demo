@@ -27,3 +27,12 @@ additionalNetworkAllow: []
 #       app: webservice
 #     remoteGenerated: Anywhere
 #     description: "Egress from demo-app"
+service:
+  enabled: true
+  image:
+    repository: ghcr.io/lemonprogis/uds-army-demo
+    tag: ###ZARF_PKG_TMPL_IMAGE_TAG###
+  env:
+    SERVICE_NAME: demo-app
+  service:
+    targetPort: 8000

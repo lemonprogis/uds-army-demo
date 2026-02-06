@@ -1,0 +1,31 @@
+# Copyright 2025 Defense Unicorns
+# SPDX-License-Identifier: AGPL-3.0-or-later OR LicenseRef-Defense-Unicorns-Commercial
+
+tasks:
+  - name: test
+    actions:
+      - task: ingress
+      # - task: ui
+
+  - name: ingress
+    actions:
+      - description: Demo App UI Status Check
+        maxRetries: 30
+        cmd: |
+          STATUS=$(curl -L -o /dev/null -s -w "%{http_code}\n" https://demo-app.uds.dev)
+          echo "Demo app system status: ${STATUS}"
+          if [ "$STATUS" != "200" ]; then
+            sleep 10
+            exit 1
+          fi
+
+  # - name: ui
+  #   description: Demo App UI Checks
+  #   actions:
+  #     - cmd: |
+  #         docker run --rm --ipc=host --net=host --mount type=bind,source="$(pwd)",target=/app mcr.microsoft.com/playwright:v1.50.1-jammy sh -c " \
+  #           cd app && \
+  #           npm ci && \
+  #           npx playwright test \
+  #           "
+  #       dir: tests

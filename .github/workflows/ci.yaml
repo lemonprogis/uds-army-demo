@@ -95,7 +95,7 @@ jobs:
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
         run: |
           echo "${{ secrets.COSIGN_PRIVATE_KEY }}" > cosign.key
-          ./olm vouch zarf-package-*.tar.zst --key cosign.key --opengrep-evidence opengrep.sarif.json --log-level debug
+          ./olm vouch zarf-package-*.tar.zst --key cosign.key --opengrep-evidence opengrep.sarif.json --log-level debug --test-directory tests
 
       - name: Publish Zarf Package
         run: |
