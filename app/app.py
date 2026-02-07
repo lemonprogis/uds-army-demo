@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 
 app = Flask(__name__)
 
@@ -15,6 +15,16 @@ APP_ENV = getenv("APP_ENV", "dev")
 
 @app.route("/")
 def root():
+    return render_template(
+        "index.html",
+        service_name=SERVICE_NAME,
+        message=APP_MESSAGE,
+        env=APP_ENV,
+    )
+
+
+@app.route("/api")
+def api():
     return jsonify(
         service=SERVICE_NAME,
         message=APP_MESSAGE,
@@ -26,10 +36,6 @@ def root():
 @app.route("/healthz")
 def healthz():
     return jsonify(status="ok", service=SERVICE_NAME)
-
-@app.route("/test")
-def test():
-    return jsonify(test="test successful", service=SERVICE_NAME)
 
 if __name__ == "__main__":
     port = int(getenv("PORT", "8000"))

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ service_name }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header>
+    <h1>{{ service_name }}</h1>
+    <span class="env-badge">{{ env }}</span>
+  </header>
+
+  <main>
+    <div class="cards">
+      <div class="card">
+        <div class="label">Status</div>
+        <div class="value status-ok" id="health-status">Checking&hellip;</div>
+      </div>
+      <div class="card">
+        <div class="label">Message</div>
+        <div class="value">{{ message }}</div>
+      </div>
+      <div class="card">
+        <div class="label">Timestamp</div>
+        <div class="value" id="timestamp">&mdash;</div>
+      </div>
+    </div>
+
+    <div class="section-title">API Endpoints</div>
+    <div class="endpoints">
+      <div class="endpoint" data-href="/api">
+        <span class="method">GET</span>
+        <span class="path">/api</span>
+        <span class="desc">Service info</span>
+        <span class="status-dot" id="dot-api"></span>
+      </div>
+      <div class="endpoint" data-href="/healthz">
+        <span class="method">GET</span>
+        <span class="path">/healthz</span>
+        <span class="desc">Health check</span>
+        <span class="status-dot" id="dot-healthz"></span>
+      </div>
+    </div>
+  </main>
+
+  <footer>Running on Flask &middot; Packaged with Zarf &middot; Deployed with UDS</footer>
+
+  <script>
+    async function check(url, dotId) {
+      const dot = document.getElementById(dotId);
+      try {
+        const r = await fetch(url);
+        dot.classList.toggle('up', r.ok);
+        dot.classList.toggle('down', !r.ok);
+        return r.ok ? await r.json() : null;
+      } catch {
+        dot.classList.add('down');
+        return null;
+      }
+    }
+
+    async function refresh() {
+      const [api] = await Promise.all([
+        check('/api', 'dot-api'),
+        check('/healthz', 'dot-healthz'),
+      ]);
+
+      const el = document.getElementById('health-status');
+      const dots = document.querySelectorAll('.status-dot');
+      const allUp = [...dots].every(d => d.classList.contains('up'));
+      el.textContent = allUp ? 'Healthy' : 'Degraded';
+      el.className = 'value ' + (allUp ? 'status-ok' : 'status-err');
+
+      if (api && api.timestamp) {
+        document.getElementById('timestamp').textContent = api.timestamp;
+      }
+    }
+
+    refresh();
+    setInterval(refresh, 10000);
+
+    document.querySelectorAll('.endpoint').forEach(el => {
+      el.addEventListener('click', () => window.open(el.dataset.href, '_blank'));
+    });
+  </script>
+</body>
+</html>

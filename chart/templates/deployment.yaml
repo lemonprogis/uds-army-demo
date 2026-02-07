@@ -1,55 +1,47 @@
-{{- if .Values.service.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: python
+  name: {{ .Chart.Name }}
   labels:
-    app.kubernetes.io/component: python-service
+    app: {{ .Chart.Name }}
 spec:
-  replicas: {{ .Values.service.replicaCount }}
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app.kubernetes.io/instance: {{ .Release.Name }}
-      app.kubernetes.io/component: python-service
+      {{- include "compat.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/instance: {{ .Release.Name }}
-        app.kubernetes.io/component: python-service
+        {{- include "compat.selectorLabels" . | nindent 8 }}
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       containers:
-        - name: python-service
-          image: "{{ .Values.service.image.repository }}:{{ .Values.service.image.tag }}"
-          imagePullPolicy: {{ .Values.service.image.pullPolicy }}
-          ports:
-            - name: http
-              containerPort: {{ .Values.service.service.targetPort }}
-              protocol: TCP
-          env:
-            - name: SERVICE_NAME
-              value: "{{ .Values.service.env.SERVICE_NAME }}"
-            - name: APP_ENV
-              value: "{{ .Values.service.env.APP_ENV }}"
-            - name: APP_MESSAGE
-              value: "{{ .Values.service.env.APP_MESSAGE }}"
-            - name: PORT
-              value: "{{ .Values.service.env.PORT }}"
-          readinessProbe:
-            httpGet:
-              path: /healthz
-              port: http
-            initialDelaySeconds: 3
-            periodSeconds: 10
-          livenessProbe:
-            httpGet:
-              path: /healthz
-              port: http
-            initialDelaySeconds: 10
-            periodSeconds: 20
-          resources:
-            {{- toYaml .Values.service.resources | nindent 12 }}
-{{- end }}
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - name: http
+          containerPort: {{ .Values.env.PORT }}
+          protocol: TCP
+        env:
+        - name: SERVICE_NAME
+          value: {{ .Values.env.SERVICE_NAME | quote }}
+        - name: APP_MESSAGE
+          value: {{ .Values.env.APP_MESSAGE | quote }}
+        - name: APP_ENV
+          value: {{ .Values.env.APP_ENV | quote }}
+        - name: PORT
+          value: {{ .Values.env.PORT | quote }}
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: http
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}

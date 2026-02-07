@@ -7,36 +7,16 @@ metadata:
   name: demo-app
   namespace: {{ .Release.Namespace }}
 spec:
-  {{- if .Values.sso.enabled }}
-  sso:
-    - name: #TEMPLATE_APPLICATION_DISPLAY_NAME# Login
-      clientId: uds-package-demo-app
+  sso: 
+    - name: {{ .Values.uds.sso.name }}
+      clientId: {{ .Values.uds.sso.clientId }}
       redirectUris:
-        - "https://demo-app.{{ .Values.domain }}/oauth2/callback/saml"
-      protocol: saml
-      defaultClientScopes:
-        - "mapper-saml-email-email"
-        - "mapper-saml-username-login"
-        - "mapper-saml-username-name"
-
-      attributes:
-        saml.client.signature: "false"
-
-      secretName: {{ .Values.sso.secretName }}
-      # This secret template configures sso for the application. Will need updated based on application required configuration
-      secretTemplate:
-        demo-app.sso.config.key: |
-            example.auth.saml.enabled: {{ .Values.sso.enabled }}
-            example.auth.saml.applicationId: clientField(clientId)
-            example.auth.saml.providerName: {{ .Values.sso.saml.providerName }}
-            example.auth.saml.providerId: https://sso.{{ .Values.domain }}/realms/uds
-            example.auth.saml.loginUrl: https://sso.{{ .Values.domain }}/realms/uds/protocol/saml
-            example.auth.saml.user.login: login
-            example.auth.saml.user.name: name
-            example.auth.saml.user.email: email
-            example.auth.saml.certificate.secured: clientField(samlIdpCertificate)
-  {{- end }}
-  # Customize network policies and expose services via istio
+        - "https://{{ .Values.uds.host }}.{{ .Values.global.domain }}/oauth2/callback"
+      enableAuthserviceSelector:
+        {{- include "compat.selectorLabels" . | nindent 8 }}
+      groups:
+        anyOf:
+          - "/UDS Core/Admin"
   network:
     serviceMesh:
       mode: ambient
@@ -46,7 +26,8 @@ spec:
           app: demo-app
         gateway: tenant
         host: demo-app
-        port: 1234
+        port: 8000
+        targetPort: 8000
     allow:
       - direction: Ingress
         remoteGenerated: IntraNamespace
@@ -54,7 +35,23 @@ spec:
       - direction: Egress
         remoteGenerated: IntraNamespace
 
-      # Custom rules for unanticipated scenarios
-      {{- with .Values.additionalNetworkAllow }}
-      {{ toYaml . | nindent 6 }}
-      {{- end }}
+      - direction: Egress
+        remoteGenerated: KubeAPI
+
+      - direction: Egress
+        selector:
+          {{- include "compat.selectorLabels" . | nindent 10 }}
+        remoteNamespace: keycloak
+        remoteSelector:
+          app.kubernetes.io/name: keycloak
+        port: 8080
+        description: "SSO - App to Keycloak"
+
+      - direction: Egress
+        selector:
+          {{- include "compat.selectorLabels" . | nindent 10 }}
+        remoteNamespace: authservice
+        remoteSelector:
+          app.kubernetes.io/name: authservice
+        port: 10003
+        description: "SSO - App to Authservice"

@@ -1,38 +1,33 @@
-# Copyright 2024 Defense Unicorns
-# SPDX-License-Identifier: AGPL-3.0-or-later OR LicenseRef-Defense-Unicorns-Commercial
+replicaCount: 1
 
-# Example values from UDS package repo template
-domain: "###ZARF_VAR_DOMAIN###"
-sso:
-  enabled: false
-  protocol: saml
-  secretName: demo-app-sso
-  adminGroups: ["/#TEMPLATE_APPLICATION_DISPLAY_NAME# Admin", "/UDS Core/Admin"]
-  saml:
-    providerName: "#TEMPLATE_APPLICATION_DISPLAY_NAME#"
-# Support for custom `network.allow` entries on the Package CR
-additionalNetworkAllow: []
-#    # Notice no `remoteGenerated` field here on custom internal rule
-#   - direction: Ingress
-#     selector:
-#       app: jenkins
-#     remoteNamespace: jenkins
-#     remoteSelector:
-#       app: jenkins
-#     port: 8180
-#     description: "Ingress from Jenkins"
-#   # No `remoteNamespace`, `remoteSelector`, or `port` fields on rule to `remoteGenerated`
-#   - direction: Egress
-#     selector:
-#       app: webservice
-#     remoteGenerated: Anywhere
-#     description: "Egress from demo-app"
+image:
+  repository: ghcr.io/lemonprogis/uds-army-demo
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
 service:
-  enabled: true
-  image:
-    repository: ghcr.io/lemonprogis/uds-army-demo
-    tag: ###ZARF_PKG_TMPL_IMAGE_TAG###
-  env:
-    SERVICE_NAME: demo-app
-  service:
-    targetPort: 8000
+  type: ClusterIP
+  port: 8000
+
+env:
+  SERVICE_NAME: python-service
+  APP_MESSAGE: "Hello from Python 12-factor app!"
+  APP_ENV: container
+  PORT: "8000"
+
+global:
+  domain: uds.dev
+
+uds:
+  host: demo-app
+  sso:
+    name: Demo App Login
+    clientId: uds-army-demo
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 250Mi
