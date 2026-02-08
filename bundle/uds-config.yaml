@@ -1,9 +1,6 @@
 # Copyright 2024 Defense Unicorns
 # SPDX-License-Identifier: AGPL-3.0-or-later OR LicenseRef-Defense-Unicorns-Commercial
 
-# variables:
-#   some-application:
-#     EXAMPLE_DEP_PACKAGE_VAR: true
-#   demo-app:
-#     EXAMPLE_DB_USERNAME: my-postgres-user
-#     EXAMPLE_DB_ENDPOINT: postgres
+variables:
+  core-identity-authorization:
+    INSECURE_ADMIN_PASSWORD_GENERATION: true

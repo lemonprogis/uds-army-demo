@@ -1,31 +1,26 @@
 # Copyright 2025 Defense Unicorns
 # SPDX-License-Identifier: AGPL-3.0-or-later OR LicenseRef-Defense-Unicorns-Commercial
 
+includes:
+  - common-setup: https://raw.githubusercontent.com/defenseunicorns/uds-common/v1.23.0/tasks/setup.yaml
+
 tasks:
   - name: test
     actions:
-      - task: ingress
-      # - task: ui
+      - task: e2e-test
 
-  - name: ingress
+  - name: e2e-test
     actions:
-      - description: Demo App UI Status Check
-        maxRetries: 30
+      - description: "Setup the Doug User for testing"
+        task: common-setup:keycloak-user
+        with:
+          group: "/UDS Core/Admin"
+      - description: E2E Tests
         cmd: |
-          STATUS=$(curl -L -o /dev/null -s -w "%{http_code}\n" https://demo-app.uds.dev)
-          echo "Demo app system status: ${STATUS}"
-          if [ "$STATUS" != "200" ]; then
-            sleep 10
-            exit 1
-          fi
-
-  # - name: ui
-  #   description: Demo App UI Checks
-  #   actions:
-  #     - cmd: |
-  #         docker run --rm --ipc=host --net=host --mount type=bind,source="$(pwd)",target=/app mcr.microsoft.com/playwright:v1.50.1-jammy sh -c " \
-  #           cd app && \
-  #           npm ci && \
-  #           npx playwright test \
-  #           "
-  #       dir: tests
+          # renovate: datasource=docker depName=mcr.microsoft.com/playwright versioning=docker
+          docker run --rm --ipc=host --net=host --mount type=bind,source="$(pwd)",target=/app mcr.microsoft.com/playwright:v1.58.0-noble sh -c " \
+            cd app && \
+            npm ci && \
+            npx playwright test app.test.ts \
+            "
+        dir: tests/playwright
