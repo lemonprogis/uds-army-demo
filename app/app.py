@@ -32,6 +32,9 @@ def api():
         timestamp=datetime.utcnow().isoformat() + "Z",
     )
 
+@app.route("/hey")
+def hey():
+    return jsonify(greeting="hey", service=SERVICE_NAME)
 
 @app.route("/healthz")
 def healthz():

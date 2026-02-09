@@ -36,6 +36,12 @@
         <span class="desc">Service info</span>
         <span class="status-dot" id="dot-api"></span>
       </div>
+      <div class="endpoint" data-href="/hey">
+        <span class="method">GET</span>
+        <span class="path">/hey</span>
+        <span class="desc">Greeting</span>
+        <span class="status-dot" id="dot-hey"></span>
+      </div>
       <div class="endpoint" data-href="/healthz">
         <span class="method">GET</span>
         <span class="path">/healthz</span>
@@ -64,6 +70,7 @@
     async function refresh() {
       const [api] = await Promise.all([
         check('/api', 'dot-api'),
+        check('/hey', 'dot-hey'),
         check('/healthz', 'dot-healthz'),
       ]);
 

@@ -51,6 +51,7 @@ test.describe("Demo App", () => {
     await expect(page.locator("#health-status")).toBeVisible();
     await expect(page.locator("#timestamp")).toBeVisible();
     await expect(page.locator(".endpoint[data-href='/api']")).toBeVisible();
+    await expect(page.locator(".endpoint[data-href='/hey']")).toBeVisible();
     await expect(page.locator(".endpoint[data-href='/healthz']")).toBeVisible();
   });
 
@@ -60,6 +61,7 @@ test.describe("Demo App", () => {
       timeout: 15000,
     });
     await expect(page.locator("#dot-api.up")).toBeVisible({ timeout: 15000 });
+    await expect(page.locator("#dot-hey.up")).toBeVisible({ timeout: 15000 });
     await expect(page.locator("#dot-healthz.up")).toBeVisible({ timeout: 15000 });
     await expect(page.locator("#timestamp")).not.toHaveText("\u2014");
   });
@@ -74,6 +76,16 @@ test.describe("Demo App", () => {
     expect(response.body).toHaveProperty("message");
     expect(response.body).toHaveProperty("env");
     expect(response.body).toHaveProperty("timestamp");
+  });
+
+  test("hey endpoint returns greeting", async () => {
+    const response = await page.evaluate(async (url) => {
+      const res = await fetch(`${url}/hey`);
+      return { status: res.status, body: await res.json() };
+    }, appUrl);
+    expect(response.status).toBe(200);
+    expect(response.body.greeting).toBe("hey");
+    expect(response.body).toHaveProperty("service");
   });
 
   test("healthz endpoint returns ok", async () => {
