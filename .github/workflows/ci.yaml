@@ -43,7 +43,7 @@ jobs:
       - name: Witness Run OpenGrep
         uses: testifysec/witness-run-action@v1
         with:
-          step: build
+          step: opengrep
           enable-archivista: false
           enable-sigstore: false
           command: opengrep scan --sarif --sarif-output opengrep.sarif.json
