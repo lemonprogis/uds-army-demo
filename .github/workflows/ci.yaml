@@ -45,9 +45,8 @@ jobs:
         with:
           step: opengrep
           enable-archivista: false
-          enable-sigstore: false
+          enable-sigstore: true
           command: opengrep scan --sarif --sarif-output opengrep.sarif.json
-          key: cosign.key
 
       - name: Build Zarf package
         run: |
