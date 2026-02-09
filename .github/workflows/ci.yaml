@@ -47,6 +47,13 @@ jobs:
           enable-archivista: false
           enable-sigstore: true
           command: opengrep scan --sarif --sarif-output opengrep.sarif.json
+          outfile: witness-opengrep.json
+
+      - name: Upload Witness OpenGrep Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: witness-opengrep
+          path: witness-opengrep.json
 
       - name: Build Zarf package
         run: |
