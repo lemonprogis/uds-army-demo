@@ -47,7 +47,8 @@ jobs:
           enable-archivista: false
           enable-sigstore: false
           command: opengrep scan --sarif --sarif-output opengrep.sarif.json
-      
+          key: cosign.key
+
       - name: Build Zarf package
         run: |
           ARCHITECTURE="amd64"
