@@ -40,9 +40,13 @@ jobs:
           curl -sSL https://raw.githubusercontent.com/opengrep/opengrep/v1.15.1/install.sh | bash
           echo "$HOME/.opengrep/cli/latest" >> "$GITHUB_PATH"
 
-      - name: OpenGrep Scan
-        run: |
-          opengrep scan --sarif --sarif-output opengrep.sarif.json
+      - name: Witness Run OpenGrep
+        uses: testifysec/witness-run-action@v1
+        with:
+          step: build
+          enable-archivista: false
+          enable-sigstore: false
+          command: opengrep scan --sarif --sarif-output opengrep.sarif.json
       
       - name: Build Zarf package
         run: |
