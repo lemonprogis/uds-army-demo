@@ -41,7 +41,7 @@ jobs:
           echo "$HOME/.opengrep/cli/latest" >> "$GITHUB_PATH"
 
       - name: Witness Run OpenGrep
-        uses: testifysec/witness-run-action@v1
+        uses: testifysec/witness-run@v1
         with:
           step: opengrep
           enable-archivista: false
