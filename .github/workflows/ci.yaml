@@ -47,29 +47,27 @@ jobs:
           enable-archivista: false
           enable-sigstore: true
           command: opengrep scan --sarif --sarif-output opengrep.sarif.json
-          outfile: witness-opengrep.json
+          outfile: opengrep-witness.json
 
-      - name: Upload Witness OpenGrep Artifact
-        uses: actions/upload-artifact@v4
+      - name: Witness Build Zarf package
+        uses: testifysec/witness-run-action@7aa15e327829f1f2a523365c564c948d5dde69dd # v0.3.3
         with:
-          name: witness-opengrep
-          path: witness-opengrep.json
-
-      - name: Build Zarf package
-        run: |
-          ARCHITECTURE="amd64"
-          FLAVOR="upstream"
-          uds zarf package create . --confirm --no-progress --architecture="${ARCHITECTURE}" --flavor "${FLAVOR}"
+          step: zarf-create
+          enable-archivista: false
+          enable-sigstore: true
+          command: |
+            ARCHITECTURE="amd64"
+            FLAVOR="upstream"
+            uds zarf package create . --confirm --no-progress --architecture="${ARCHITECTURE}" --flavor "${FLAVOR}"
+          outfile: zarf-create-witness.json
 
       - name: Vouch for Zarf Package
         env:
           OLM_TOKEN: ${{ secrets.OLM_TOKEN }}
-          OLM_CONTROL_PLANE: cp-api.uds.run:443
-          OLM_CAS_SERVER: cas-api.uds.run:443
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
         run: |
           echo "${{ secrets.COSIGN_PRIVATE_KEY }}" > cosign.key
-          ./olm vouch zarf-package-*.tar.zst --key cosign.key --opengrep-evidence opengrep.sarif.json --log-level debug --test-directory tests
+          ./olm vouch zarf-package-*.tar.zst --key cosign.key --opengrep-evidence opengrep.sarif.json --log-level debug --test-directory tests --attestations opengrep-witness.json,zarf-create-witness.json
 
       - name: Publish Zarf Package
         run: |
