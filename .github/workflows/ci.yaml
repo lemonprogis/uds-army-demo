@@ -55,10 +55,7 @@ jobs:
           step: zarf-create
           enable-archivista: false
           enable-sigstore: true
-          command: |
-            ARCHITECTURE="amd64"
-            FLAVOR="upstream"
-            uds zarf package create . --confirm --no-progress --architecture="${ARCHITECTURE}" --flavor "${FLAVOR}"
+          command: uds zarf package create . --confirm --no-progress --architecture="amd64" --flavor "upstream"
           outfile: zarf-create-witness.json
 
       - name: Vouch for Zarf Package
