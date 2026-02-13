@@ -84,7 +84,7 @@ jobs:
           OLM_CAS_SERVER: cas-api.uds.run:443
         run: |
           echo "${{ secrets.COSIGN_PRIVATE_KEY }}" > cosign.key
-          ./olm vouch zarf-package-*.tar.zst --key cosign.key --opengrep-evidence opengrep.sarif.json,gitleaks.sarif.json --log-level debug --test-directory tests --attestations opengrep-witness.json,zarf-create-witness.json,gitleaks-witness.json
+          ./olm vouch zarf-package-*.tar.zst --key cosign.key --sarif-evidence opengrep.sarif.json,gitleaks.sarif.json --log-level debug --test-directory tests --attestations opengrep-witness.json,zarf-create-witness.json,gitleaks-witness.json
 
       - name: Publish Zarf Package
         run: |

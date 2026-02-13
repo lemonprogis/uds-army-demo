@@ -7,7 +7,7 @@ inputs:
     default: registry.uds.run
   version:
     description: Version of OLM CLI to install
-    default: v0.1.9-linux
+    default: v0.1.10-linux
   username:
     description: Username for authentication if needed
     required: true
