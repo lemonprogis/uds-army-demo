@@ -64,7 +64,7 @@ jobs:
           step: gitleaks
           enable-archivista: false
           enable-sigstore: true
-          command: gitleaks --report-format sarif --report-path gitleaks.sarif.json
+          command: gitleaks dir . --report-format sarif --report-path gitleaks.sarif.json
           outfile: gitleaks-witness.json
 
       - name: Witness Build Zarf package
