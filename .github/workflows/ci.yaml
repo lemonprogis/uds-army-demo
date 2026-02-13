@@ -47,6 +47,7 @@ jobs:
           mkdir -p $HOME/.local/bin
           mv gitleaks $HOME/.local/bin
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          rm gitleaks.tar.gz
 
       - name: Witness Run OpenGrep
         uses: testifysec/witness-run-action@7aa15e327829f1f2a523365c564c948d5dde69dd # v0.3.3
