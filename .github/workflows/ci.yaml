@@ -40,6 +40,14 @@ jobs:
           curl -sSL https://raw.githubusercontent.com/opengrep/opengrep/v1.15.1/install.sh | bash
           echo "$HOME/.opengrep/cli/latest" >> "$GITHUB_PATH"
 
+      - name: Install Gitleaks
+        run: |
+          curl -sSL https://github.com/gitleaks/gitleaks/releases/download/v8.30.0/gitleaks_8.30.0_linux_x64.tar.gz -o gitleaks.tar.gz
+          tar -zxf gitleaks.tar.gz
+          mkdir -p $HOME/.local/bin
+          mv gitleaks $HOME/.local/bin
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
       - name: Witness Run OpenGrep
         uses: testifysec/witness-run-action@7aa15e327829f1f2a523365c564c948d5dde69dd # v0.3.3
         with:
@@ -48,6 +56,15 @@ jobs:
           enable-sigstore: true
           command: opengrep scan --sarif --sarif-output opengrep.sarif.json
           outfile: opengrep-witness.json
+
+      - name: Witness Run Gitleaks
+        uses: testifysec/witness-run-action@7aa15e327829f1f2a523365c564c948d5dde69dd # v0.3.3
+        with:
+          step: gitleaks
+          enable-archivista: false
+          enable-sigstore: true
+          command: gitleaks --report-format sarif --report-path gitleaks.sarif.json
+          outfile: gitleaks-witness.json
 
       - name: Witness Build Zarf package
         uses: testifysec/witness-run-action@7aa15e327829f1f2a523365c564c948d5dde69dd # v0.3.3
@@ -66,7 +83,7 @@ jobs:
           OLM_CAS_SERVER: cas-api.uds.run:443
         run: |
           echo "${{ secrets.COSIGN_PRIVATE_KEY }}" > cosign.key
-          ./olm vouch zarf-package-*.tar.zst --key cosign.key --opengrep-evidence opengrep.sarif.json --log-level debug --test-directory tests --attestations opengrep-witness.json,zarf-create-witness.json
+          ./olm vouch zarf-package-*.tar.zst --key cosign.key --opengrep-evidence opengrep.sarif.json --log-level debug --test-directory tests --attestations opengrep-witness.json,zarf-create-witness.json,gitleaks-witness.json
 
       - name: Publish Zarf Package
         run: |
