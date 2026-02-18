@@ -37,7 +37,7 @@ jobs:
           password: ${{ secrets.OLM_PASSWORD }}
 
       - name: Install Ruff
-        run: pip install ruff==0.9.10
+        run: pip install ruff==0.15.1
 
       - name: Witness Run Ruff
         uses: testifysec/witness-run-action@7aa15e327829f1f2a523365c564c948d5dde69dd # v0.3.3
