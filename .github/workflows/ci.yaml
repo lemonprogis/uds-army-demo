@@ -39,14 +39,7 @@ jobs:
       - name: Install Ruff
         run: pip install ruff==0.15.1
 
-      - name: Witness Run Ruff
-        uses: testifysec/witness-run-action@7aa15e327829f1f2a523365c564c948d5dde69dd # v0.3.3
-        with:
-          step: ruff
-          enable-archivista: false
-          enable-sigstore: true
-          command: ruff check app/
-          outfile: ruff-witness.json
+      
 
       - name: Install OpenGrep
         run: |
@@ -62,6 +55,15 @@ jobs:
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
           rm gitleaks.tar.gz
 
+      - name: Witness Run Gitleaks
+        uses: testifysec/witness-run-action@7aa15e327829f1f2a523365c564c948d5dde69dd # v0.3.3
+        with:
+          step: gitleaks
+          enable-archivista: false
+          enable-sigstore: true
+          command: gitleaks dir . --report-format sarif --report-path gitleaks.sarif.json
+          outfile: gitleaks-witness.json
+
       - name: Witness Run OpenGrep
         uses: testifysec/witness-run-action@7aa15e327829f1f2a523365c564c948d5dde69dd # v0.3.3
         with:
@@ -71,14 +73,14 @@ jobs:
           command: opengrep scan --sarif --sarif-output opengrep.sarif.json
           outfile: opengrep-witness.json
 
-      - name: Witness Run Gitleaks
+      - name: Witness Run Ruff
         uses: testifysec/witness-run-action@7aa15e327829f1f2a523365c564c948d5dde69dd # v0.3.3
         with:
-          step: gitleaks
+          step: ruff
           enable-archivista: false
           enable-sigstore: true
-          command: gitleaks dir . --report-format sarif --report-path gitleaks.sarif.json
-          outfile: gitleaks-witness.json
+          command: ruff check app/
+          outfile: ruff-witness.json
 
       - name: Witness Build Zarf package
         uses: testifysec/witness-run-action@7aa15e327829f1f2a523365c564c948d5dde69dd # v0.3.3
