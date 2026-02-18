@@ -1,0 +1,24 @@
+# Ruff Python linter configuration
+# https://docs.astral.sh/ruff/configuration/
+
+# Target the app directory
+src = ["app"]
+
+# Python version compatibility
+target-version = "py311"
+
+# Max line length
+line-length = 100
+
+[lint]
+# Enable a broad set of rules: pyflakes (F), pycodestyle (E/W), isort (I),
+# flake8-bugbear (B), and pyupgrade (UP)
+select = ["E", "F", "W", "I", "B", "UP"]
+
+# Ignore rules that are too strict for a demo app
+ignore = [
+  "E501",  # line-too-long (handled by formatter)
+]
+
+[lint.isort]
+known-first-party = ["app"]

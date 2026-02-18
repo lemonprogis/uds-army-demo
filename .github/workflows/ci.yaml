@@ -36,6 +36,18 @@ jobs:
           username: ${{ secrets.OLM_USER_ID }}
           password: ${{ secrets.OLM_PASSWORD }}
 
+      - name: Install Ruff
+        run: pip install ruff==0.9.10
+
+      - name: Witness Run Ruff
+        uses: testifysec/witness-run-action@7aa15e327829f1f2a523365c564c948d5dde69dd # v0.3.3
+        with:
+          step: ruff
+          enable-archivista: false
+          enable-sigstore: true
+          command: ruff check app/
+          outfile: ruff-witness.json
+
       - name: Install OpenGrep
         run: |
           curl -sSL https://raw.githubusercontent.com/opengrep/opengrep/v1.15.1/install.sh | bash
@@ -85,7 +97,7 @@ jobs:
           OLM_CAS_SERVER: cas-api.uds.run:443
         run: |
           echo "${{ secrets.COSIGN_PRIVATE_KEY }}" > cosign.key
-          ./olm vouch zarf-package-*.tar.zst --key cosign.key --sarif-evidence opengrep.sarif.json,gitleaks.sarif.json --log-level debug --test-directory tests --attestations opengrep-witness.json,zarf-create-witness.json,gitleaks-witness.json
+          ./olm vouch zarf-package-*.tar.zst --key cosign.key --sarif-evidence opengrep.sarif.json,gitleaks.sarif.json --log-level debug --test-directory tests --attestations opengrep-witness.json,zarf-create-witness.json,gitleaks-witness.json,ruff-witness.json
 
       - name: Publish Zarf Package
         run: |
