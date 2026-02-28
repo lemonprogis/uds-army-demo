@@ -3,7 +3,7 @@ kind: ZarfPackageConfig
 metadata:
   name: demo-app
   description: "UDS Army Demo"
-  version: "2.1.20"
+  version: "2.1.21"
     
 components:
   - name: demo-app
@@ -13,11 +13,11 @@ components:
       - name: demo-app
         localPath: chart
         namespace: demo-app
-        version: 2.1.20
+        version: 2.1.21
         valuesFiles:
           - values/upstream-values.yaml
     images:
-      - ghcr.io/lemonprogis/uds-army-demo:2.1.20
+      - ghcr.io/lemonprogis/uds-army-demo:2.1.21
     actions:
       onCreate:
         before:
@@ -25,4 +25,4 @@ components:
           - cmd: docker buildx inspect uds-builder >/dev/null 2>&1 || docker buildx create --name uds-builder --use --bootstrap
           - cmd: docker buildx use uds-builder
           - cmd: |
-              docker buildx build --no-cache --load -t ghcr.io/lemonprogis/uds-army-demo:2.1.20 --platform linux/###ZARF_PKG_ARCH### ./app
+              docker buildx build --no-cache --load -t ghcr.io/lemonprogis/uds-army-demo:2.1.21 --platform linux/###ZARF_PKG_ARCH### ./app
