@@ -177,4 +177,4 @@ packages:
 
   - name: demo-app
     path: ../
-    ref: 2.1.22
+    ref: 2.1.23
