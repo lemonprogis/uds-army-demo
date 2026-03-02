@@ -64,14 +64,17 @@ jobs:
           command: gitleaks dir . --report-format sarif --report-path gitleaks.sarif.json
           outfile: gitleaks-witness.json
 
-      - name: Witness Run OpenGrep
-        uses: testifysec/witness-run-action@7aa15e327829f1f2a523365c564c948d5dde69dd # v0.3.3
-        with:
-          step: opengrep
-          enable-archivista: false
-          enable-sigstore: true
-          command: opengrep scan --sarif --sarif-output opengrep.sarif.json
-          outfile: opengrep-witness.json
+      #- name: Witness Run OpenGrep
+      #  uses: testifysec/witness-run-action@7aa15e327829f1f2a523365c564c948d5dde69dd # v0.3.3
+      #  with:
+      #    step: opengrep
+      #    enable-archivista: false
+      #    enable-sigstore: true
+      #    command: opengrep scan --sarif --sarif-output opengrep.sarif.json
+      #    outfile: opengrep-witness.json
+
+      - name: Run OpenGrep without Witness (due to performance issues)
+        run: opengrep scan --sarif --sarif-output opengrep.sarif.json
 
       - name: Witness Run Ruff
         uses: testifysec/witness-run-action@7aa15e327829f1f2a523365c564c948d5dde69dd # v0.3.3
@@ -99,7 +102,7 @@ jobs:
           OLM_CAS_SERVER: cas-api.uds.run:443
         run: |
           echo "${{ secrets.COSIGN_PRIVATE_KEY }}" > cosign.key
-          ./olm vouch zarf-package-*.tar.zst --key cosign.key --sarif-evidence opengrep.sarif.json,gitleaks.sarif.json --log-level debug --test-directory tests --attestations opengrep-witness.json,zarf-create-witness.json,gitleaks-witness.json,ruff-witness.json
+          ./olm vouch zarf-package-*.tar.zst --key cosign.key --sarif-evidence opengrep.sarif.json,gitleaks.sarif.json --log-level debug --test-directory tests --attestations zarf-create-witness.json,gitleaks-witness.json,ruff-witness.json
 
       - name: Publish Zarf Package
         run: |
