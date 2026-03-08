@@ -105,6 +105,7 @@ jobs:
       - name: Vouch for Zarf Package
         env:
           OLM_CAT: cat.uds.run
+          OLM_ORG: uds-army-demo
         run: |
           ./olm vouch zarf-package-*.tar.zst --identity-token "${{ steps.oidc.outputs.token }}" --sarif-evidence opengrep.sarif.json,gitleaks.sarif.json --log-level debug --test-directory tests --attestations zarf-create-witness.json,gitleaks-witness.json,ruff-witness.json
 
