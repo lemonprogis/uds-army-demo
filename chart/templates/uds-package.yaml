@@ -11,7 +11,7 @@ spec:
     - name: {{ .Values.uds.sso.name }}
       clientId: {{ .Values.uds.sso.clientId }}
       redirectUris:
-        - "https://{{ .Values.uds.host }}.{{ .Values.global.domain }}/oauth2/callback"
+        - "https://{{ .Values.uds.host }}.{{ .Values.domain }}/oauth2/callback"
       enableAuthserviceSelector:
         {{- include "compat.selectorLabels" . | nindent 8 }}
       groups:

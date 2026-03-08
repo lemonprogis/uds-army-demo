@@ -1,3 +1,5 @@
+domain: uds.dev
+
 replicaCount: 1
 
 image:
@@ -14,9 +16,6 @@ env:
   APP_MESSAGE: "Hello from Python 12-factor app!"
   APP_ENV: container
   PORT: "8000"
-
-global:
-  domain: uds.dev
 
 uds:
   host: demo-app
