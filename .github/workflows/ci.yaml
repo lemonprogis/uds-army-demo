@@ -62,17 +62,14 @@ jobs:
           command: gitleaks dir . --report-format sarif --report-path gitleaks.sarif.json
           outfile: gitleaks-witness.json
 
-      #- name: Witness Run OpenGrep
-      #  uses: testifysec/witness-run-action@7aa15e327829f1f2a523365c564c948d5dde69dd # v0.3.3
-      #  with:
-      #    step: opengrep
-      #    enable-archivista: false
-      #    enable-sigstore: true
-      #    command: opengrep scan --sarif --sarif-output opengrep.sarif.json
-      #    outfile: opengrep-witness.json
-
-      - name: Run OpenGrep without Witness (due to performance issues)
-        run: opengrep scan --sarif --sarif-output opengrep.sarif.json
+      - name: Witness Run OpenGrep
+        uses: testifysec/witness-run-action@7aa15e327829f1f2a523365c564c948d5dde69dd # v0.3.3
+        with:
+          step: opengrep
+          enable-archivista: false
+          enable-sigstore: true
+          command: opengrep scan --sarif --sarif-output opengrep.sarif.json
+          outfile: opengrep-witness.json
 
       - name: Witness Run Ruff
         uses: testifysec/witness-run-action@7aa15e327829f1f2a523365c564c948d5dde69dd # v0.3.3
