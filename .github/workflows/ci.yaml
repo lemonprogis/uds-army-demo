@@ -94,7 +94,7 @@ jobs:
         run: |
           TOKEN="$(curl -fsSL \
             -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" \
-            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=fulcio" \
+            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=cat" \
             | jq -r '.value')"
           echo "::add-mask::${TOKEN}"
           echo "token=${TOKEN}" >> "${GITHUB_OUTPUT}"
