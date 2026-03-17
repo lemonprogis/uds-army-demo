@@ -104,7 +104,11 @@ jobs:
           OLM_CAT: cat-api.uds.run
           OLM_ORG: uds-army-demo
         run: |
-          ./olm vouch zarf-package-*.tar.zst --identity-token "${{ steps.oidc.outputs.token }}" --sarif-evidence opengrep.sarif.json,gitleaks.sarif.json --log-level debug --test-directory tests --attestations zarf-create-witness.json,gitleaks-witness.json,ruff-witness.json
+          ./olm vouch zarf-package-*.tar.zst \
+            --identity-token "${{ steps.oidc.outputs.token }}" \
+            --sarif-evidence opengrep.sarif.json,gitleaks.sarif.json \
+            --log-level debug --test-directory tests \
+            --attestations zarf-create-witness.json,gitleaks-witness.json,ruff-witness.json
 
       - name: Publish Zarf Package
         run: |
