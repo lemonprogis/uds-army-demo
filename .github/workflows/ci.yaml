@@ -89,23 +89,12 @@ jobs:
           command: uds zarf package create . --confirm --no-progress --architecture="amd64" --flavor "upstream"
           outfile: zarf-create-witness.json
 
-      - name: Get GitHub OIDC token
-        id: oidc
-        run: |
-          TOKEN="$(curl -fsSL \
-            -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" \
-            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=cat" \
-            | jq -r '.value')"
-          echo "::add-mask::${TOKEN}"
-          echo "token=${TOKEN}" >> "${GITHUB_OUTPUT}"
-
       - name: Vouch for Zarf Package
         env:
           OLM_CAT: cat-api.uds.run
           OLM_ORG: uds-army-demo
         run: |
           ./olm vouch zarf-package-*.tar.zst \
-            --identity-token "${{ steps.oidc.outputs.token }}" \
             --sarif-evidence opengrep.sarif.json,gitleaks.sarif.json \
             --log-level debug --test-directory tests \
             --attestations zarf-create-witness.json,gitleaks-witness.json,ruff-witness.json
