@@ -9,6 +9,10 @@ on:
     branches:
       - main
 
+# Overview
+# Lint: Ruff
+# SAST: opengrep
+# Secrets: gitleaks
 jobs:
   build-package-vouch-publish:
     runs-on: ubuntu-latest
@@ -36,14 +40,17 @@ jobs:
           username: ${{ secrets.OLM_USER_ID }}
           password: ${{ secrets.OLM_PASSWORD }}
 
+      # Replace with linter appropriate for app if source is available
       - name: Install Ruff
         run: pip install ruff==0.15.1
 
+      # Only useful if source is available
       - name: Install OpenGrep
         run: |
           curl -sSL https://raw.githubusercontent.com/opengrep/opengrep/v1.15.1/install.sh | bash
           echo "$HOME/.opengrep/cli/latest" >> "$GITHUB_PATH"
 
+      # Should always run
       - name: Install Gitleaks
         run: |
           curl -sSL https://github.com/gitleaks/gitleaks/releases/download/v8.30.0/gitleaks_8.30.0_linux_x64.tar.gz -o gitleaks.tar.gz
@@ -53,24 +60,10 @@ jobs:
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
           rm gitleaks.tar.gz
 
-      - name: Witness Run Gitleaks
-        uses: testifysec/witness-run-action@7aa15e327829f1f2a523365c564c948d5dde69dd # v0.3.3
-        with:
-          step: gitleaks
-          enable-archivista: false
-          enable-sigstore: true
-          command: gitleaks dir . --report-format sarif --report-path gitleaks.sarif.json
-          outfile: gitleaks-witness.json
+# Any step that creates an artifact or evidence should be run via witness-run-action so that the artifact/evidence
+# can be attested to.
 
-      - name: Witness Run OpenGrep
-        uses: testifysec/witness-run-action@7aa15e327829f1f2a523365c564c948d5dde69dd # v0.3.3
-        with:
-          step: opengrep
-          enable-archivista: false
-          enable-sigstore: true
-          command: opengrep scan --sarif --sarif-output opengrep.sarif.json
-          outfile: opengrep-witness.json
-
+      # Replace with linter appropriate for app if source is available
       - name: Witness Run Ruff
         uses: testifysec/witness-run-action@7aa15e327829f1f2a523365c564c948d5dde69dd # v0.3.3
         with:
@@ -80,6 +73,27 @@ jobs:
           command: ruff check app/
           outfile: ruff-witness.json
 
+      # Only useful if source is available
+      - name: Witness Run OpenGrep
+        uses: testifysec/witness-run-action@7aa15e327829f1f2a523365c564c948d5dde69dd # v0.3.3
+        with:
+          step: opengrep
+          enable-archivista: false
+          enable-sigstore: true
+          command: opengrep scan --sarif --sarif-output opengrep.sarif.json
+          outfile: opengrep-witness.json
+
+      # Should always run
+      - name: Witness Run Gitleaks
+        uses: testifysec/witness-run-action@7aa15e327829f1f2a523365c564c948d5dde69dd # v0.3.3
+        with:
+          step: gitleaks
+          enable-archivista: false
+          enable-sigstore: true
+          command: gitleaks dir . --report-format sarif --report-path gitleaks.sarif.json
+          outfile: gitleaks-witness.json
+
+      # Create the uds package
       - name: Witness Build Zarf package
         uses: testifysec/witness-run-action@7aa15e327829f1f2a523365c564c948d5dde69dd # v0.3.3
         with:
@@ -89,6 +103,9 @@ jobs:
           command: uds zarf package create . --confirm --no-progress --architecture="amd64" --flavor "upstream"
           outfile: zarf-create-witness.json
 
+      # `sarif-evidence` and `attestations` flags should match the outputs of the above actions, adjust as needed for
+      # added/removed/changed steps/tools
+      # `test-directory` should only exist when that directory exists with actual tests in it
       - name: Vouch for Zarf Package
         env:
           OLM_CAT: cat-api.uds.run
@@ -99,6 +116,8 @@ jobs:
             --log-level debug --test-directory tests \
             --attestations zarf-create-witness.json,gitleaks-witness.json,ruff-witness.json
 
+      # Pushes the uds package to the uds army registry, make sure the org in oci://registry.uds.run/uds-army-demo is your org and not
+      # uds-army-demo, so an org called example would be oci://registry.uds.run/example
       - name: Publish Zarf Package
         run: |
           uds zarf tools registry login -u ${{ secrets.DEMO_ORG_USER_ID }} -p ${{ secrets.DEMO_ORG_PASSWORD }} registry.uds.run
