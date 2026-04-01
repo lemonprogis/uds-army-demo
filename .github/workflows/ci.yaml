@@ -116,8 +116,8 @@ jobs:
           step: stig-generate-checklist
           enable-archivista: false
           enable-sigstore: true
-          command: uds-pk stig generate-checklist --profile stigs/stig-profile.yaml --xccdf stigs/U_ASD_STIG_V6R4_Manual-xccdf.xml
-          outfile: stig-generate-checklist-witness.json
+          command: uds-pk stig generate-checklist --profile stigs/stig-profile.yaml --xccdf stigs/U_ASD_STIG_V6R4_Manual-xccdf.xml --output stig-checklist.sarif.json
+          outfile: stig-checklist-witness.json
 
       # Create the uds package
       - name: Witness Build Zarf package
@@ -138,7 +138,7 @@ jobs:
           OLM_ORG: uds-army-demo
         run: |
           ./olm vouch zarf-package-*.tar.zst \
-            --sarif-evidence opengrep.sarif.json,gitleaks.sarif.json,uds-army-demo-asd-v6r4.cklb \
+            --sarif-evidence opengrep.sarif.json,gitleaks.sarif.json,stig-checklist.sarif.json \
             --log-level debug --test-directory tests \
             --attestations zarf-create-witness.json,gitleaks-witness.json,ruff-witness.json,stig-generate-checklist-witness.json
 
