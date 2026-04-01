@@ -116,7 +116,7 @@ jobs:
           step: stig-generate-checklist
           enable-archivista: false
           enable-sigstore: true
-          command: uds-pk stig generate-checklist --profile stigs/stig-profile.yaml --xccdf stigs/U_ASD_STIG_V6R4_Manual-xccdf.xml --output stig-checklist.sarif.json
+          command: uds-pk stig generate-checklist --profile stigs/stig-profile.yaml --xccdf stigs/U_ASD_STIG_V6R4_Manual-xccdf.xml
           outfile: stig-checklist-witness.json
 
       # Create the uds package
@@ -138,9 +138,9 @@ jobs:
           OLM_ORG: uds-army-demo
         run: |
           ./olm vouch zarf-package-*.tar.zst \
-            --sarif-evidence opengrep.sarif.json,gitleaks.sarif.json,stig-checklist.sarif.json \
+            --sarif-evidence opengrep.sarif.json,gitleaks.sarif.json \
             --log-level debug --test-directory tests \
-            --attestations zarf-create-witness.json,gitleaks-witness.json,ruff-witness.json,stig-generate-checklist-witness.json
+            --attestations zarf-create-witness.json,gitleaks-witness.json,ruff-witness.json,stig-checklist-witness.json
 
       # Pushes the uds package to the uds army registry, make sure the org in oci://registry.uds.run/uds-army-demo is your org and not
       # uds-army-demo, so an org called example would be oci://registry.uds.run/example
