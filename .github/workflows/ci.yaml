@@ -62,22 +62,22 @@ jobs:
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
           rm gitleaks.tar.gz
 
-# Any step that creates an artifact or evidence should be run via witness-run-action so that the artifact/evidence
-# can be attested to.
-
       # Dash days variant with STIG checklist feature
       - name: Install uds-pk (dash days variant with STIG checklist feature)
         env:
           GH_TOKEN: ${{ secrets.UDS_PK_SECRET }}
         run: |
-          gh release download v0.1.6 \
+          gh release download v0.1.7 \
             --repo defenseunicorns-dashdays/2026-03-stig-attest \
-            --pattern "uds-pk_v0.1.6_Linux_amd64" \
+            --pattern "uds-pk_v0.1.7_Linux_amd64" \
             --output uds-pk
           chmod +x uds-pk
           mkdir -p $HOME/.local/bin
           mv uds-pk $HOME/.local/bin
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      # Any step that creates an artifact or evidence should be run via witness-run-action so that the artifact/evidence
+      # can be attested to.
 
       # Replace with linter appropriate for app if source is available
       - name: Witness Run Ruff
@@ -116,7 +116,7 @@ jobs:
           step: stig-generate-checklist
           enable-archivista: false
           enable-sigstore: true
-          command: uds-pk stig generate-checklist --profile stigs/stig-profile.yaml --xccdf stigs/U_ASD_STIG_V6R4_Manual-xccdf.xml
+          command: uds-pk stig generate-checklist
           outfile: stig-checklist-witness.json
 
       # Create the uds package
