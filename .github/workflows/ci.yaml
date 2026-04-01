@@ -63,11 +63,14 @@ jobs:
           rm gitleaks.tar.gz
 
       # Dash days variant with STIG checklist feature
-      - name: Install uds-pk
+      - name: Install uds-pk (dash days variant with STIG checklist feature)
+        env:
+          GH_TOKEN: ${{ secrets.UDS_PK_SECRET }}
         run: |
-          curl -sSL \
-            -H "Authorization: token ${{ secrets.UDS_PK_SECRET }}" \
-            https://github.com/defenseunicorns-dashdays/2026-03-stig-attest/releases/download/v0.1.6/uds-pk_v0.1.6_Linux_amd64 -o uds-pk
+          gh release download v0.1.6 \
+            --repo defenseunicorns-dashdays/2026-03-stig-attest \
+            --pattern "uds-pk_v0.1.6_Linux_amd64" \
+            --output uds-pk
           chmod +x uds-pk
           mkdir -p $HOME/.local/bin
           mv uds-pk $HOME/.local/bin
@@ -113,7 +116,7 @@ jobs:
           step: stig-generate-checklist
           enable-archivista: false
           enable-sigstore: true
-          command: uds-pk stig generate-checklist --profile stig-profile.yaml --xccdf stigs/U_ASD_STIG_V6R4_Manual-xccdf.xml
+          command: uds-pk stig generate-checklist --profile stigs/stig-profile.yaml --xccdf stigs/U_ASD_STIG_V6R4_Manual-xccdf.xml
           outfile: stig-generate-checklist-witness.json
 
       # Create the uds package
