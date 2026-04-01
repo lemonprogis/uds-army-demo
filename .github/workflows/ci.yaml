@@ -61,6 +61,7 @@ jobs:
           mv gitleaks $HOME/.local/bin
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
           rm gitleaks.tar.gz
+
 # Any step that creates an artifact or evidence should be run via witness-run-action so that the artifact/evidence
 # can be attested to.
 
