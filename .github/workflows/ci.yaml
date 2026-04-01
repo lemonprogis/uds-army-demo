@@ -27,10 +27,10 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-    
+
       - name: UDS CLI Setup
         uses: ./.github/actions/uds-cli-setup
-      
+
       - name: Install Cosign
         uses: sigstore/cosign-installer@v4.0.0
 
@@ -65,6 +65,20 @@ jobs:
 # Any step that creates an artifact or evidence should be run via witness-run-action so that the artifact/evidence
 # can be attested to.
 
+      # Dash days variant with STIG checklist feature
+      - name: Install uds-pk (dash days variant with STIG checklist feature)
+        env:
+          GH_TOKEN: ${{ secrets.UDS_PK_SECRET }}
+        run: |
+          gh release download v0.1.6 \
+            --repo defenseunicorns-dashdays/2026-03-stig-attest \
+            --pattern "uds-pk_v0.1.6_Linux_amd64" \
+            --output uds-pk
+          chmod +x uds-pk
+          mkdir -p $HOME/.local/bin
+          mv uds-pk $HOME/.local/bin
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
       # Replace with linter appropriate for app if source is available
       - name: Witness Run Ruff
         uses: testifysec/witness-run-action@7aa15e327829f1f2a523365c564c948d5dde69dd # v0.3.3
@@ -95,6 +109,16 @@ jobs:
           command: gitleaks dir . --report-format sarif --report-path gitleaks.sarif.json
           outfile: gitleaks-witness.json
 
+      # Create STIG Checklist (using the dash days variant of uds-pk with STIG checklist feature)
+      - name: Witness Generated STIG Checklist
+        uses: testifysec/witness-run-action@7aa15e327829f1f2a523365c564c948d5dde69dd # v0.3.3
+        with:
+          step: stig-generate-checklist
+          enable-archivista: false
+          enable-sigstore: true
+          command: uds-pk stig generate-checklist --profile stigs/stig-profile.yaml --xccdf stigs/U_ASD_STIG_V6R4_Manual-xccdf.xml
+          outfile: stig-checklist-witness.json
+
       # Create the uds package
       - name: Witness Build Zarf package
         uses: testifysec/witness-run-action@7aa15e327829f1f2a523365c564c948d5dde69dd # v0.3.3
@@ -116,7 +140,7 @@ jobs:
           ./olm vouch zarf-package-*.tar.zst \
             --sarif-evidence opengrep.sarif.json,gitleaks.sarif.json \
             --log-level debug --test-directory tests \
-            --attestations zarf-create-witness.json,gitleaks-witness.json,ruff-witness.json
+            --attestations zarf-create-witness.json,gitleaks-witness.json,ruff-witness.json,stig-checklist-witness.json
 
       # Pushes the uds package to the uds army registry, make sure the org in oci://registry.uds.run/uds-army-demo is your org and not
       # uds-army-demo, so an org called example would be oci://registry.uds.run/example
