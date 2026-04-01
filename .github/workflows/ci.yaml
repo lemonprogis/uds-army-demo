@@ -62,9 +62,13 @@ jobs:
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
           rm gitleaks.tar.gz
 
-      - name: Install uds-pk (dash days variant with STIG checklist feature)
+      # Dash days variant with STIG checklist feature
+      - name: Install uds-pk
         run: |
-          curl -sSL https://github.com/defenseunicorns-dashdays/2026-03-stig-attest/releases/download/v0.1.6/uds-pk_v0.1.6_Linux_amd64 -o uds-pk
+          curl -sSL \
+            -H "Authorization: token ${{ secrets.UDS_PK_SECRET }}" \
+            https://github.com/defenseunicorns-dashdays/2026-03-stig-attest/releases/download/v0.1.6/uds-pk_v0.1.6_Linux_amd64 -o uds-pk
+          chmod +x uds-pk
           mkdir -p $HOME/.local/bin
           mv uds-pk $HOME/.local/bin
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
