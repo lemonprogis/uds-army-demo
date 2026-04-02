@@ -5,4 +5,4 @@
 domain: ####ZARF_VAR_DOMAIN###
 image:
   repository: ghcr.io/lemonprogis/uds-army-demo
-  tag: 2.1.30
+  tag: 2.1.31

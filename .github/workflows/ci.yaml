@@ -140,6 +140,7 @@ jobs:
           ./olm vouch zarf-package-*.tar.zst \
             --sarif-evidence opengrep.sarif.json,gitleaks.sarif.json \
             --log-level debug --test-directory tests \
+            --evidence uds-army-demo-asd-v6r4.cklb \
             --attestations zarf-create-witness.json,gitleaks-witness.json,ruff-witness.json,stig-checklist-witness.json
 
       # Pushes the uds package to the uds army registry, make sure the org in oci://registry.uds.run/uds-army-demo is your org and not
