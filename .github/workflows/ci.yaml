@@ -49,8 +49,11 @@ jobs:
       # Only useful if source is available
       - name: Install OpenGrep
         run: |
-          curl -sSL https://raw.githubusercontent.com/opengrep/opengrep/v1.15.1/install.sh | bash
-          echo "$HOME/.opengrep/cli/latest" >> "$GITHUB_PATH"
+          curl -fSL -o opengrep https://github.com/opengrep/opengrep/releases/download/v1.15.1/opengrep_manylinux_x86
+          chmod +x opengrep
+          mkdir -p $HOME/.local/bin
+          mv opengrep $HOME/.local/bin
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
       # Should always run
       - name: Install Gitleaks
