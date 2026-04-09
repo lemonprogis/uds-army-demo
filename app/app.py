@@ -35,7 +35,7 @@ def api():
 
 @app.route("/hey")
 def hey():
-    return jsonify(greeting="hey", service=SERVICE_NAME)
+    return jsonify(greeting="hey man", service=SERVICE_NAME)
 
 @app.route("/healthz")
 def healthz():
